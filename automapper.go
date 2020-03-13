@@ -15,6 +15,18 @@ import (
 	"reflect"
 )
 
+type Profile struct {
+	Mappings []Mapping
+}
+type Mapping struct{
+	sourceField string
+	destinationField string
+}
+
+func (p Profile) AddMap(sourceField string, destinationField string) {
+	p.Mappings = append(p.Mappings, Mapping{sourceField, destinationField})
+}
+
 // Map fills out the fields in dest with values from source. All fields in the
 // destination object must exist in the source object.
 //
@@ -46,7 +58,7 @@ func Map(source, dest interface{}) {
 // that the Map function should take a number of options that can modify its
 // behavior - but I'd rather not add that functionality before I have a better
 // idea what is a good options format.
-func MapLoose(source, dest interface{}) {
+func MapLoose(source, dest interface{}, profile Profile) {
 	var destType = reflect.TypeOf(dest)
 	if destType.Kind() != reflect.Ptr {
 		panic("Dest must be a pointer type")
